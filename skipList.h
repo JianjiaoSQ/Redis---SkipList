@@ -31,6 +31,8 @@ public:
 
 private:
     Key key;
+
+public:
     Value value;
 };
 
@@ -73,6 +75,7 @@ public:
     int del(Key key);
     int modify(Key key, Value value);
     int search(Key key);
+    int rangeSearch(const Key beginKey, const Key endKey);
 
     void displayList();
     void writeFile();
@@ -191,11 +194,36 @@ int skipList<Key, Value>::del(const Key key) {
     return 1;
 }
 
-/* ***********************************************
-                    更新键值对
-************************************************ */
+/* *************** 更新键值对 ********************** 
+* 修改键值对应的值，键值不能修改；
+* 如果要修改键值，只能删除键值对后重新添加；
+****************************************************/
+                    
+template<typename Key, typename Value>
+int skipList<Key, Value>::modify(const Key key, const Value val) {
+    skipNode<Key, Value>* cur = head;
+    Value oldVal;
 
-/* *****************查找键值对*********************               
+    for(int i = curLevel; i >= 0; --i) {
+        while(cur->forward[i] && cur->forward[i]->getKey() < key) {
+            cur = cur->forward[i];
+        }
+    }
+    cur = cur->forward[0];
+
+    if(cur && cur->getKey() == key) {
+        oldVal = cur->getValue();
+        cur->value = val;
+        std::cout << "键值对(" << key << ", " << oldVal << ") 更新为 (" 
+        << "键值对(" << key << ", " << cur->getValue() << ")" << std::endl;
+        return 1;
+    } 
+    std::cout << "键值 Key = " << key << "未找到！" << std::endl;
+    return 0;
+
+}
+
+/* ***************** 查找键值对 *********************               
 * 含义：0：未找到  1：已找到
 ************************************************ */
 template<typename Key, typename Value>
@@ -216,6 +244,29 @@ int skipList<Key, Value>::search(const Key key) {
         return 1;
     } 
     std::cout << "键值 Key = " << key << "未找到！" << std::endl;
+    return 0;
+}
+
+/* *************** 跳表范围查找 ************** */
+template<typename Key, typename Value>
+int skipList<Key, Value>::rangeSearch(const Key left, const Key right) {
+    skipNode<Key, Value>* cur = head;
+
+    for(int i = curLevel; i >= 0; --i) {
+        while(cur->forward[i] && cur->forward[i]->getKey() < left) {
+            cur = cur->forward[i];
+        }  
+    }
+    cur = cur->forward[0];
+    if(cur && cur->getKey() >= left) {
+        std::cout << "范围查询 [" << left << ", " << right << "] : " << std::endl;
+        while(cur && cur->getKey() <= right) {
+            std::cout << "("<< cur->getKey() << ", " << cur->getValue() << ")\n";
+            cur = cur->forward[0];
+        }
+        std::cout << std::endl;
+        return 1;
+    }
     return 0;
 }
 
