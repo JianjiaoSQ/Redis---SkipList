@@ -22,7 +22,7 @@
 
 跳表实现结构：
 
-![](pic/skiplist.png)
+![](../pic/skiplist.png)
 
 
 
