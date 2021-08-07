@@ -22,7 +22,7 @@
 
 跳表实现结构：
 
-![](../RedisSkipList/blob/main/pic/skiplist.png)
+<div align=center><img src="https://wx1.sinaimg.cn/mw2000/006UYdYPly1gt8eraldfpj30xc0dwgo9.jpg" width="700"></div>
 
 
 
